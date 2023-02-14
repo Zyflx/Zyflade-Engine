@@ -314,7 +314,8 @@ class TitleState extends MusicBeatState
 
 			new FlxTimer().start(2, function(tmr:FlxTimer)
 			{
-				// Get current version of Kade Engine
+				FlxG.switchState(new MainMenuState());
+				/*Get current version of Kade Engine
 				
 				var http = new haxe.Http("https://raw.githubusercontent.com/KadeDev/Kade-Engine/master/version.downloadMe");
 				var returnedData:Array<String> = [];
@@ -341,7 +342,7 @@ class TitleState extends MusicBeatState
 				  FlxG.switchState(new MainMenuState()); // fail but we go anyway
 				}
 				
-				http.request();
+				http.request();*/
 			});
 			// FlxG.sound.play(Paths.music('titleShoot'), 0.7);
 		}
@@ -390,11 +391,9 @@ class TitleState extends MusicBeatState
 
 		logoBl.animation.play('bump');
 		danceLeft = !danceLeft;
-
-		if (danceLeft)
-			gfDance.animation.play('danceRight');
-		else
-			gfDance.animation.play('danceLeft');
+		var anim:String = danceLeft ? 'danceRight' : 'danceLeft';
+		
+		gfDance.animation.play(anim);
 
 		FlxG.log.add(curBeat);
 
