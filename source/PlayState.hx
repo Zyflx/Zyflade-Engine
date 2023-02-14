@@ -78,155 +78,134 @@ class PlayState extends MusicBeatState
 {
 	public static var instance:PlayState = null;
 
+	// Song / Week Related Vars
+	private var vocals:FlxSound;
+	private var generatedMusic:Bool = false;
+	private var startingSong:Bool = false;
+	public static var songOffset:Float = 0;
+	var songLength:Float = 0;
 	public static var curStage:String = '';
 	public static var SONG:SwagSong;
+	private var curSong:String = "";
 	public static var isStoryMode:Bool = false;
 	public static var storyWeek:Int = 0;
 	public static var storyPlaylist:Array<String> = [];
 	public static var storyDifficulty:Int = 1;
 	public static var weekSong:Int = 0;
 	public static var weekScore:Int = 0;
+	public static var campaignScore:Int = 0;
+	public static var campaignMisses:Int = 0;
+	
+	// Gameplay Related Vars
 	public static var shits:Int = 0;
 	public static var bads:Int = 0;
 	public static var goods:Int = 0;
 	public static var sicks:Int = 0;
-
-	public static var songPosBG:FlxSprite;
-	public static var songPosBar:FlxBar;
-
-	public static var rep:Replay;
-	public static var loadRep:Bool = false;
-
-	public static var noteBools:Array<Bool> = [false, false, false, false];
-
-	var halloweenLevel:Bool = false;
-
-	var songLength:Float = 0;
-	var kadeEngineWatermark:FlxText;
-	
-	#if windows
-	// Discord RPC variables
-	var storyDifficultyText:String = "";
-	var iconRPC:String = "";
-	var detailsText:String = "";
-	var detailsPausedText:String = "";
-	#end
-
-	private var vocals:FlxSound;
-
-	public var originalX:Float;
-
-	public static var dad:Character;
-	public static var gf:Character;
-	public static var boyfriend:Boyfriend;
-
-	public var notes:FlxTypedGroup<Note>;
-	private var unspawnNotes:Array<Note> = [];
-
-	public var strumLine:FlxSprite;
-	private var curSection:Int = 0;
-
-	private var camFollow:FlxObject;
-
-	private static var prevCamFollow:FlxObject;
-
-	public static var strumLineNotes:FlxTypedGroup<FlxSprite> = null;
-	public static var playerStrums:FlxTypedGroup<FlxSprite> = null;
-	public static var cpuStrums:FlxTypedGroup<FlxSprite> = null;
-
-	private var camZooming:Bool = false;
-	private var curSong:String = "";
-
-	private var gfSpeed:Int = 1;
-	public var health:Float = 1; //making public because sethealth doesnt work without it
 	private var combo:Int = 0;
+	public static var highestCombo:Int = 0;
 	public static var misses:Int = 0;
-	public static var campaignMisses:Int = 0;
+	private var gfSpeed:Int = 1;
+	public var health:Float = 1;
 	public var accuracy:Float = 0.00;
 	private var accuracyDefault:Float = 0.00;
 	private var totalNotesHit:Float = 0;
 	private var totalNotesHitDefault:Float = 0;
 	private var totalPlayed:Int = 0;
 	private var ss:Bool = false;
-
-
+	private var curSection:Int = 0;
+	public var songScore:Int = 0;
+	var songScoreDef:Int = 0;
+	var fc:Bool = true;
+	
+	// Character Related Vars
+	public static var dad:Character;
+	public static var gf:Character;
+	public static var boyfriend:Boyfriend;
+	private var singAnims:Array<String> = ['singLEFT', 'singDOWN', 'singUP', 'singRIGHT'];
+	
+	// Note / Strumline Related Vars
+	public var notes:FlxTypedGroup<Note>;
+	private var unspawnNotes:Array<Note> = [];
+	var notesHitArray:Array<Date> = [];
+	public static var noteBools:Array<Bool> = [false, false, false, false];
+	public var strumLine:FlxSprite;
+	public static var strumLineNotes:FlxTypedGroup<FlxSprite> = null;
+	public static var playerStrums:FlxTypedGroup<FlxSprite> = null;
+	public static var cpuStrums:FlxTypedGroup<FlxSprite> = null;
+	
+	// HUD Related Vars
+	public static var songPosBG:FlxSprite;
+	public static var songPosBar:FlxBar;
+	public var originalX:Float;
+	var kadeEngineWatermark:FlxText;
 	private var healthBarBG:FlxSprite;
 	private var healthBar:FlxBar;
 	private var songPositionBar:Float = 0;
+	public var iconP1:HealthIcon;
+	public var iconP2:HealthIcon;
+	var songName:FlxText;
+	var scoreTxt:FlxText;
+	var replayTxt:FlxText;
 	
-	private var generatedMusic:Bool = false;
-	private var startingSong:Bool = false;
-
-	public var iconP1:HealthIcon; //making these public again because i may be stupid
-	public var iconP2:HealthIcon; //what could go wrong?
+	// Camera Related Vars
+	private var camFollow:FlxObject;
+	private static var prevCamFollow:FlxObject;
+	private var camZooming:Bool = false;
 	public var camHUD:FlxCamera;
 	private var camGame:FlxCamera;
-
-	public static var offsetTesting:Bool = false;
-
-	var notesHitArray:Array<Date> = [];
-	var currentFrames:Int = 0;
-
-	public var dialogue:Array<String> = ['dad:blah blah blah', 'bf:coolswag'];
-
+	
+	// Replay Related Vars
+	private var saveNotes:Array<Dynamic> = [];
+	private var saveJudge:Array<String> = [];
+	private var replayAna:Analysis = new Analysis();
+	public static var rep:Replay;
+	public static var loadRep:Bool = false;
+	
+	// Stage Related Vars
+	var halloweenLevel:Bool = false;
 	var halloweenBG:FlxSprite;
 	var isHalloween:Bool = false;
-
 	var phillyCityLights:FlxTypedGroup<FlxSprite>;
 	var phillyTrain:FlxSprite;
 	var trainSound:FlxSound;
-
 	var limo:FlxSprite;
 	var grpLimoDancers:FlxTypedGroup<BackgroundDancer>;
 	var fastCar:FlxSprite;
-	var songName:FlxText;
 	var upperBoppers:FlxSprite;
 	var bottomBoppers:FlxSprite;
 	var santa:FlxSprite;
-
-	var fc:Bool = true;
-
 	var bgGirls:BackgroundGirls;
 	var wiggleShit:WiggleEffect = new WiggleEffect();
-
-	var talking:Bool = true;
-	public var songScore:Int = 0;
-	var songScoreDef:Int = 0;
-	var scoreTxt:FlxText;
-	var replayTxt:FlxText;
-
-	public static var campaignScore:Int = 0;
-
 	var defaultCamZoom:Float = 1.05;
-
 	public static var daPixelZoom:Float = 6;
-
+	
+	// Dialogue Related Vars
+	public var dialogue:Array<String> = ['dad:blah blah blah', 'bf:coolswag'];
+	var talking:Bool = true;
+	
+	// Discord RPC variables
+	#if windows
+	var storyDifficultyText:String = "";
+	var iconRPC:String = "";
+	var detailsText:String = "";
+	var detailsPausedText:String = "";
+	#end
+		
+	// Lua Related Vars
+	private var executeModchart = false;
+		
+	// Other / Misc Vars
 	public static var theFunne:Bool = true;
 	var funneEffect:FlxSprite;
 	var inCutscene:Bool = false;
 	public static var repPresses:Int = 0;
 	public static var repReleases:Int = 0;
-
 	public static var timeCurrently:Float = 0;
 	public static var timeCurrentlyR:Float = 0;
-	
-	// Will fire once to prevent debug spam messages and broken animations
 	private var triggeredAlready:Bool = false;
-	
-	// Will decide if she's even allowed to headbang at all depending on the song
 	private var allowedToHeadbang:Bool = false;
-	// Per song additive offset
-	public static var songOffset:Float = 0;
-	// BotPlay text
-	private var botPlayState:FlxText;
-	// Replay shit
-	private var saveNotes:Array<Dynamic> = [];
-	private var saveJudge:Array<String> = [];
-	private var replayAna:Analysis = new Analysis(); // replay analysis
-
-	public static var highestCombo:Int = 0;
-
-	private var executeModchart = false;
+	public static var offsetTesting:Bool = false;
+	var currentFrames:Int = 0;
 
 	// API stuff
 	
@@ -255,7 +234,6 @@ class PlayState extends MusicBeatState
 
 		repPresses = 0;
 		repReleases = 0;
-
 
 		PlayStateChangeables.useDownscroll = FlxG.save.data.downscroll;
 		PlayStateChangeables.safeFrames = FlxG.save.data.frames;
@@ -405,50 +383,48 @@ class PlayState extends MusicBeatState
 				isHalloween = true;
 			}
 			case 'philly': 
-					{
-					curStage = 'philly';
+			{
+				curStage = 'philly';
 
-					var bg:FlxSprite = new FlxSprite(-100).loadGraphic(Paths.image('philly/sky', 'week3'));
-					bg.scrollFactor.set(0.1, 0.1);
-					add(bg);
+				var bg:FlxSprite = new FlxSprite(-100).loadGraphic(Paths.image('philly/sky', 'week3'));
+				bg.scrollFactor.set(0.1, 0.1);
+				add(bg);
 
-					var city:FlxSprite = new FlxSprite(-10).loadGraphic(Paths.image('philly/city', 'week3'));
-					city.scrollFactor.set(0.3, 0.3);
-					city.setGraphicSize(Std.int(city.width * 0.85));
-					city.updateHitbox();
-					add(city);
+				var city:FlxSprite = new FlxSprite(-10).loadGraphic(Paths.image('philly/city', 'week3'));
+				city.scrollFactor.set(0.3, 0.3);
+				city.setGraphicSize(Std.int(city.width * 0.85));
+				city.updateHitbox();
+				add(city);
 
-					phillyCityLights = new FlxTypedGroup<FlxSprite>();
-					if(FlxG.save.data.distractions){
-						add(phillyCityLights);
-					}
+				phillyCityLights = new FlxTypedGroup<FlxSprite>();
+				if(FlxG.save.data.distractions) {
+					add(phillyCityLights);
+				}
 
-					for (i in 0...5)
-					{
-							var light:FlxSprite = new FlxSprite(city.x).loadGraphic(Paths.image('philly/win' + i, 'week3'));
-							light.scrollFactor.set(0.3, 0.3);
-							light.visible = false;
-							light.setGraphicSize(Std.int(light.width * 0.85));
-							light.updateHitbox();
-							light.antialiasing = true;
-							phillyCityLights.add(light);
-					}
+				for (i in 0...5)
+				{
+						var light:FlxSprite = new FlxSprite(city.x).loadGraphic(Paths.image('philly/win' + i, 'week3'));
+						light.scrollFactor.set(0.3, 0.3);
+						light.visible = false;
+						light.setGraphicSize(Std.int(light.width * 0.85));
+						light.updateHitbox();
+						light.antialiasing = true;
+						phillyCityLights.add(light);
+				}
 
-					var streetBehind:FlxSprite = new FlxSprite(-40, 50).loadGraphic(Paths.image('philly/behindTrain','week3'));
-					add(streetBehind);
+				var streetBehind:FlxSprite = new FlxSprite(-40, 50).loadGraphic(Paths.image('philly/behindTrain','week3'));
+				add(streetBehind);
 
-					phillyTrain = new FlxSprite(2000, 360).loadGraphic(Paths.image('philly/train','week3'));
-					if(FlxG.save.data.distractions){
-						add(phillyTrain);
-					}
+				phillyTrain = new FlxSprite(2000, 360).loadGraphic(Paths.image('philly/train','week3'));
+				if(FlxG.save.data.distractions) add(phillyTrain);
 
-					trainSound = new FlxSound().loadEmbedded(Paths.sound('train_passes','week3'));
-					FlxG.sound.list.add(trainSound);
+				trainSound = new FlxSound().loadEmbedded(Paths.sound('train_passes','week3'));
+				FlxG.sound.list.add(trainSound);
 
-					// var cityLights:FlxSprite = new FlxSprite().loadGraphic(AssetPaths.win0.png);
+				// var cityLights:FlxSprite = new FlxSprite().loadGraphic(AssetPaths.win0.png);
 
-					var street:FlxSprite = new FlxSprite(-40, streetBehind.y).loadGraphic(Paths.image('philly/street','week3'));
-					add(street);
+				var street:FlxSprite = new FlxSprite(-40, streetBehind.y).loadGraphic(Paths.image('philly/street','week3'));
+				add(street);
 			}
 			case 'limo':
 			{
@@ -579,9 +555,9 @@ class PlayState extends MusicBeatState
 					add(evilTree);
 
 					var evilSnow:FlxSprite = new FlxSprite(-200, 700).loadGraphic(Paths.image("christmas/evilSnow",'week5'));
-						evilSnow.antialiasing = true;
+					evilSnow.antialiasing = true;
 					add(evilSnow);
-					}
+			}
 			case 'school':
 			{
 					curStage = 'school';
@@ -641,15 +617,15 @@ class PlayState extends MusicBeatState
 					bgGirls.scrollFactor.set(0.9, 0.9);
 
 					if (songLowercase == 'roses')
-						{
-							if(FlxG.save.data.distractions){
-								bgGirls.getScared();
-							}
+					{
+						if(FlxG.save.data.distractions) {
+							bgGirls.getScared();
 						}
+					}
 
 					bgGirls.setGraphicSize(Std.int(bgGirls.width * daPixelZoom));
 					bgGirls.updateHitbox();
-					if(FlxG.save.data.distractions){
+					if(FlxG.save.data.distractions) {
 						add(bgGirls);
 					}
 			}
@@ -710,32 +686,32 @@ class PlayState extends MusicBeatState
 						*/
 			}
 			case 'stage':
-				{
-						defaultCamZoom = 0.9;
-						curStage = 'stage';
-						var bg:FlxSprite = new FlxSprite(-600, -200).loadGraphic(Paths.image('stageback'));
-						bg.antialiasing = true;
-						bg.scrollFactor.set(0.9, 0.9);
-						bg.active = false;
-						add(bg);
+			{
+				defaultCamZoom = 0.9;
+				curStage = 'stage';
+				var bg:FlxSprite = new FlxSprite(-600, -200).loadGraphic(Paths.image('stageback'));
+				bg.antialiasing = true;
+				bg.scrollFactor.set(0.9, 0.9);
+				bg.active = false;
+				add(bg);
 	
-						var stageFront:FlxSprite = new FlxSprite(-650, 600).loadGraphic(Paths.image('stagefront'));
-						stageFront.setGraphicSize(Std.int(stageFront.width * 1.1));
-						stageFront.updateHitbox();
-						stageFront.antialiasing = true;
-						stageFront.scrollFactor.set(0.9, 0.9);
-						stageFront.active = false;
-						add(stageFront);
+				var stageFront:FlxSprite = new FlxSprite(-650, 600).loadGraphic(Paths.image('stagefront'));
+				stageFront.setGraphicSize(Std.int(stageFront.width * 1.1));
+				stageFront.updateHitbox();
+				stageFront.antialiasing = true;
+				stageFront.scrollFactor.set(0.9, 0.9);
+				stageFront.active = false;
+				add(stageFront);
 	
-						var stageCurtains:FlxSprite = new FlxSprite(-500, -300).loadGraphic(Paths.image('stagecurtains'));
-						stageCurtains.setGraphicSize(Std.int(stageCurtains.width * 0.9));
-						stageCurtains.updateHitbox();
-						stageCurtains.antialiasing = true;
-						stageCurtains.scrollFactor.set(1.3, 1.3);
-						stageCurtains.active = false;
+				var stageCurtains:FlxSprite = new FlxSprite(-500, -300).loadGraphic(Paths.image('stagecurtains'));
+				stageCurtains.setGraphicSize(Std.int(stageCurtains.width * 0.9));
+				stageCurtains.updateHitbox();
+				stageCurtains.antialiasing = true;
+				stageCurtains.scrollFactor.set(1.3, 1.3);
+				stageCurtains.active = false;
 	
-						add(stageCurtains);
-				}
+				add(stageCurtains);
+			}
 			default:
 			{
 					defaultCamZoom = 0.9;
@@ -807,7 +783,6 @@ class PlayState extends MusicBeatState
 					camPos.x += 600;
 					tweenCamIn();
 				}
-
 			case "spooky":
 				dad.y += 200;
 			case "monster":
@@ -835,8 +810,6 @@ class PlayState extends MusicBeatState
 				camPos.set(dad.getGraphicMidpoint().x + 300, dad.getGraphicMidpoint().y);
 		}
 
-
-		
 		boyfriend = new Boyfriend(770, 450, SONG.player1);
 
 		// REPOSITIONING PER STAGE
@@ -849,10 +822,8 @@ class PlayState extends MusicBeatState
 					resetFastCar();
 					add(fastCar);
 				}
-
 			case 'mall':
 				boyfriend.x += 200;
-
 			case 'mallEvil':
 				boyfriend.x += 320;
 				dad.y -= 80;
@@ -870,8 +841,6 @@ class PlayState extends MusicBeatState
 				add(evilTrail);
 				// evilTrail.scrollFactor.set(1.1, 1.1);
 				}
-
-
 				boyfriend.x += 200;
 				boyfriend.y += 220;
 				gf.x += 180;
@@ -889,7 +858,6 @@ class PlayState extends MusicBeatState
 			add(dad);
 			add(boyfriend);
 		}
-
 
 		if (loadRep)
 		{
@@ -961,38 +929,35 @@ class PlayState extends MusicBeatState
 		FlxG.fixedTimestep = false;
 
 		if (FlxG.save.data.songPosition) // I dont wanna talk about this code :(
-			{
-				songPosBG = new FlxSprite(0, 10).loadGraphic(Paths.image('healthBar'));
-				if (PlayStateChangeables.useDownscroll)
-					songPosBG.y = FlxG.height * 0.9 + 45; 
-				songPosBG.screenCenter(X);
-				songPosBG.scrollFactor.set();
-				add(songPosBG);
+		{
+			songPosBG = new FlxSprite(0, 10).loadGraphic(Paths.image('healthBar'));
+			if (PlayStateChangeables.useDownscroll) songPosBG.y = FlxG.height * 0.9 + 45; 
+			songPosBG.screenCenter(X);
+			songPosBG.scrollFactor.set();
+			add(songPosBG);
 				
-				songPosBar = new FlxBar(songPosBG.x + 4, songPosBG.y + 4, LEFT_TO_RIGHT, Std.int(songPosBG.width - 8), Std.int(songPosBG.height - 8), this,
-					'songPositionBar', 0, 90000);
-				songPosBar.scrollFactor.set();
-				songPosBar.createFilledBar(FlxColor.GRAY, FlxColor.LIME);
-				add(songPosBar);
+			songPosBar = new FlxBar(songPosBG.x + 4, songPosBG.y + 4, LEFT_TO_RIGHT, Std.int(songPosBG.width - 8), Std.int(songPosBG.height - 8), this,
+			'songPositionBar', 0, 90000);
+			songPosBar.scrollFactor.set();
+			songPosBar.createFilledBar(FlxColor.GRAY, FlxColor.LIME);
+			add(songPosBar);
 	
-				var songName = new FlxText(songPosBG.x + (songPosBG.width / 2) - (SONG.song.length * 5),songPosBG.y,0,SONG.song, 16);
-				if (PlayStateChangeables.useDownscroll)
-					songName.y -= 3;
-				songName.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE,FlxColor.BLACK);
-				songName.scrollFactor.set();
-				add(songName);
-				songName.cameras = [camHUD];
-			}
+			var songName = new FlxText(songPosBG.x + (songPosBG.width / 2) - (SONG.song.length * 5),songPosBG.y,0,SONG.song, 16);
+			if (PlayStateChangeables.useDownscroll) songName.y -= 3;
+			songName.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE,FlxColor.BLACK);
+			songName.scrollFactor.set();
+			add(songName);
+			songName.cameras = [camHUD];
+		}
 
 		healthBarBG = new FlxSprite(0, FlxG.height * 0.9).loadGraphic(Paths.image('healthBar'));
-		if (PlayStateChangeables.useDownscroll)
-			healthBarBG.y = 50;
+		if (PlayStateChangeables.useDownscroll) healthBarBG.y = 50;
 		healthBarBG.screenCenter(X);
 		healthBarBG.scrollFactor.set();
 		add(healthBarBG);
 
 		healthBar = new FlxBar(healthBarBG.x + 4, healthBarBG.y + 4, RIGHT_TO_LEFT, Std.int(healthBarBG.width - 8), Std.int(healthBarBG.height - 8), this,
-			'health', 0, 2);
+		'health', 0, 2);
 		healthBar.scrollFactor.set();
 		// healthBar
 		add(healthBar);
@@ -1006,37 +971,7 @@ class PlayState extends MusicBeatState
 
 		if (PlayStateChangeables.useDownscroll)
 			kadeEngineWatermark.y = FlxG.height * 0.9 + 45;
-
-		scoreTxt = new FlxText(FlxG.width / 2 - 235, healthBarBG.y + 50, 0, "", 20);
-
-		scoreTxt.screenCenter(X);
-
-		originalX = scoreTxt.x;
-
-
-		scoreTxt.scrollFactor.set();
-		
-		scoreTxt.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, FlxTextAlign.CENTER, FlxTextBorderStyle.OUTLINE,FlxColor.BLACK);
-
-		add(scoreTxt);
-
-		replayTxt = new FlxText(healthBarBG.x + healthBarBG.width / 2 - 75, healthBarBG.y + (PlayStateChangeables.useDownscroll ? 100 : -100), 0, "REPLAY", 20);
-		replayTxt.setFormat(Paths.font("vcr.ttf"), 42, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE,FlxColor.BLACK);
-		replayTxt.borderSize = 4;
-		replayTxt.borderQuality = 2;
-		replayTxt.scrollFactor.set();
-		if (loadRep)
-		{
-			add(replayTxt);
-		}
-		// Literally copy-paste of the above, fu
-		botPlayState = new FlxText(healthBarBG.x + healthBarBG.width / 2 - 75, healthBarBG.y + (PlayStateChangeables.useDownscroll ? 100 : -100), 0, "BOTPLAY", 20);
-		botPlayState.setFormat(Paths.font("vcr.ttf"), 42, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE,FlxColor.BLACK);
-		botPlayState.scrollFactor.set();
-		botPlayState.borderSize = 4;
-		botPlayState.borderQuality = 2;
-		if(PlayStateChangeables.botPlay && !loadRep) add(botPlayState);
-
+				
 		iconP1 = new HealthIcon(SONG.player1, true);
 		iconP1.y = healthBar.y - (iconP1.height / 2);
 		add(iconP1);
@@ -1044,6 +979,21 @@ class PlayState extends MusicBeatState
 		iconP2 = new HealthIcon(SONG.player2, false);
 		iconP2.y = healthBar.y - (iconP2.height / 2);
 		add(iconP2);
+
+		scoreTxt = new FlxText(FlxG.width / 2 - 235, healthBarBG.y + 50, 0, "", 20);
+		scoreTxt.screenCenter(X);
+		originalX = scoreTxt.x;
+		scoreTxt.scrollFactor.set();
+		scoreTxt.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, FlxTextAlign.CENTER, FlxTextBorderStyle.OUTLINE,FlxColor.BLACK);
+		add(scoreTxt);
+
+		replayTxt = new FlxText(healthBarBG.x + healthBarBG.width / 2 - 75, healthBarBG.y + (PlayStateChangeables.useDownscroll ? 100 : -100), 0, "", 20);
+		replayTxt.setFormat(Paths.font("vcr.ttf"), 42, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE,FlxColor.BLACK);
+		replayTxt.borderSize = 4;
+		replayTxt.borderQuality = 2;
+		replayTxt.text = loadRep ? 'REPLAY' : 'BOTPLAY';
+		replayTxt.scrollFactor.set();
+		if (loadRep || PlayStateChangeables.botPlay) add(replayTxt);
 
 		strumLineNotes.cameras = [camHUD];
 		notes.cameras = [camHUD];
@@ -1059,8 +1009,7 @@ class PlayState extends MusicBeatState
 			songPosBar.cameras = [camHUD];
 		}
 		kadeEngineWatermark.cameras = [camHUD];
-		if (loadRep)
-			replayTxt.cameras = [camHUD];
+		if (loadRep || PlayStateChangeables.botPlay) replayTxt.cameras = [camHUD];
 
 		// if (SONG.song == 'South')
 		// FlxG.camera.alpha = 0.7;
