@@ -17,9 +17,12 @@ import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
+import flixel.FlxCamera;
 
 class PauseSubState extends MusicBeatSubstate
 {
+	var camPause:FlxCamera;
+	
 	var grpMenuShit:FlxTypedGroup<Alphabet>;
 
 	var menuItems:Array<String> = ['Resume', 'Restart Song', 'Exit to menu'];
@@ -40,6 +43,10 @@ class PauseSubState extends MusicBeatSubstate
 			if (GlobalVideo.get().playing)
 				GlobalVideo.get().pause();
 		}
+		
+		camPause = new FlxCamera;
+		camPause.bgColor.alpha = 0;
+		FlxG.cameras.add(camPause);
 
 		pauseMusic = new FlxSound().loadEmbedded(Paths.music('breakfast'), true, true);
 		pauseMusic.volume = 0;
@@ -96,7 +103,7 @@ class PauseSubState extends MusicBeatSubstate
 
 		changeSelection();
 
-		cameras = [FlxG.cameras.list[FlxG.cameras.list.length - 1]];
+		cameras = [camPause];
 	}
 
 	override function update(elapsed:Float)
