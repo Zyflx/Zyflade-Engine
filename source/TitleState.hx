@@ -54,7 +54,7 @@ class TitleState extends MusicBeatState
 	override public function create():Void
 	{
 		#if polymod
-		polymod.Polymod.init({modRoot: "mods", dirs: ['introMod']});
+		// polymod.Polymod.init({modRoot: "mods", dirs: ['introMod']});
 		#end
 		
 		#if sys
@@ -89,7 +89,7 @@ class TitleState extends MusicBeatState
 		// NGio.noLogin(APIStuff.API);
 
 		#if ng
-		var ng:NGio = new NGio(APIStuff.API, APIStuff.EncKey);
+		// var ng:NGio = new NGio(APIStuff.API, APIStuff.EncKey);
 		trace('NEWGROUNDS LOL');
 		#end
 
@@ -294,11 +294,11 @@ class TitleState extends MusicBeatState
 		if (pressedEnter && !transitioning && skippedIntro)
 		{
 			#if !switch
-			NGio.unlockMedal(60960);
+			// NGio.unlockMedal(60960);
 
 			// If it's Friday according to da clock
 			if (Date.now().getDay() == 5)
-				NGio.unlockMedal(61034);
+				// NGio.unlockMedal(61034);
 			#end
 
 			if (FlxG.save.data.flashing)
