@@ -1,6 +1,7 @@
 package;
 
 import flixel.FlxG;
+import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxAtlasFrames;
 import openfl.utils.AssetType;
 import openfl.utils.Assets as OpenFlAssets;
@@ -33,6 +34,32 @@ class Paths
 		}
 
 		return getPreloadPath(file);
+	}
+	
+	static public function loadImage(key:String, ?library:String):FlxGraphic
+	{
+		var path = image(key, library);
+
+		#if FEATURE_FILESYSTEM
+		if (Caching.bitmapData != null)
+		{
+			if (Caching.bitmapData.exists(key))
+			{
+				// Get data from cache.
+				return Caching.bitmapData.get(key);
+			}
+		}
+		#end
+
+		if (OpenFlAssets.exists(path, IMAGE))
+		{
+			var bitmap = OpenFlAssets.getBitmapData(path);
+			return FlxGraphic.fromBitmapData(bitmap);
+		}
+		else
+		{
+			return null;
+		}
 	}
 
 	static public function getLibraryPath(file:String, library = "preload")
