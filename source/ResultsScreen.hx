@@ -24,12 +24,15 @@ import lime.utils.Assets;
 import flixel.math.FlxMath;
 import flixel.text.FlxText;
 import flixel.input.FlxKeyManager;
+import flixel.FlxCamera;
 
 
 using StringTools;
 
 class ResultsScreen extends FlxSubState
 {
+	public var camStats:FlxCamera;
+	
     public var background:FlxSprite;
     public var text:FlxText;
 
@@ -50,6 +53,10 @@ class ResultsScreen extends FlxSubState
 
 	override function create()
 	{	
+		camStats = new FlxCamera();
+		camStats.bgColor.alpha = 0;
+		FlxG.cameras.add(camStats);
+		
         background = new FlxSprite(0,0).makeGraphic(FlxG.width,FlxG.height,FlxColor.BLACK);
         background.scrollFactor.set();
         add(background);
@@ -157,7 +164,8 @@ class ResultsScreen extends FlxSubState
             graphSprite.alpha = FlxMath.lerp(0,1,tween.percent);
         }});
 
-        cameras = [FlxG.cameras.list[FlxG.cameras.list.length - 1]];
+		cameras = [camStats];
+        // cameras = [FlxG.cameras.list[FlxG.cameras.list.length - 1]];
 
 		super.create();
 	}
