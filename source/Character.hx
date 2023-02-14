@@ -591,7 +591,7 @@ class Character extends FlxSprite
 				dadVar = 6.1;
 			if (holdTimer >= Conductor.stepCrochet * dadVar * 0.001)
 			{
-				trace('dance');
+				// trace('dance');
 				dance();
 				holdTimer = 0;
 			}
@@ -618,56 +618,15 @@ class Character extends FlxSprite
 		{
 			switch (curCharacter)
 			{
-				case 'gf':
+				// Optimized GF Dance Code
+				case 'gf' | 'gf-christmas' | 'gf-car' | 'gf-pixel' | 'spooky':
 					if (!animation.curAnim.name.startsWith('hair'))
 					{
 						danced = !danced;
+						var anim:String = danced ? 'danceRight' : 'danceLeft';
 
-						if (danced)
-							playAnim('danceRight');
-						else
-							playAnim('danceLeft');
+						playAnim(anim);
 					}
-
-				case 'gf-christmas':
-					if (!animation.curAnim.name.startsWith('hair'))
-					{
-						danced = !danced;
-
-						if (danced)
-							playAnim('danceRight');
-						else
-							playAnim('danceLeft');
-					}
-
-				case 'gf-car':
-					if (!animation.curAnim.name.startsWith('hair'))
-					{
-						danced = !danced;
-
-						if (danced)
-							playAnim('danceRight');
-						else
-							playAnim('danceLeft');
-					}
-				case 'gf-pixel':
-					if (!animation.curAnim.name.startsWith('hair'))
-					{
-						danced = !danced;
-
-						if (danced)
-							playAnim('danceRight');
-						else
-							playAnim('danceLeft');
-					}
-
-				case 'spooky':
-					danced = !danced;
-
-					if (danced)
-						playAnim('danceRight');
-					else
-						playAnim('danceLeft');
 				default:
 					playAnim('idle');
 			}
@@ -688,18 +647,14 @@ class Character extends FlxSprite
 
 		if (curCharacter == 'gf')
 		{
-			if (AnimName == 'singLEFT')
+			switch (AnimName)
 			{
-				danced = true;
-			}
-			else if (AnimName == 'singRIGHT')
-			{
-				danced = false;
-			}
-
-			if (AnimName == 'singUP' || AnimName == 'singDOWN')
-			{
-				danced = !danced;
+				case 'singLEFT':
+					danced = true;
+				case 'singRIGHT':
+					danced = false;
+				case 'singUP' | 'singDOWN':
+					danced = !danced;
 			}
 		}
 	}
