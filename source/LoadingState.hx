@@ -110,11 +110,9 @@ class LoadingState extends MusicBeatState
 		
 		logo.animation.play('bump');
 		danceLeft = !danceLeft;
+		var anim:String = danceLeft ? 'danceRight' : 'danceLeft';
 		
-		if (danceLeft)
-			gfDance.animation.play('danceRight');
-		else
-			gfDance.animation.play('danceLeft');
+		gfDance.animation.play(anim);
 	}
 	
 	override function update(elapsed:Float)
