@@ -44,7 +44,7 @@ class PauseSubState extends MusicBeatSubstate
 				GlobalVideo.get().pause();
 		}
 		
-		camPause = new FlxCamera;
+		camPause = new FlxCamera();
 		camPause.bgColor.alpha = 0;
 		FlxG.cameras.add(camPause);
 
