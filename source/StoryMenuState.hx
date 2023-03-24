@@ -412,13 +412,8 @@ class StoryMenuState extends MusicBeatState
 
 	function updateText()
 	{	
-		for (i in 0...2)
-			grpWeekCharacters.members[i].setCharacter(weekCharacters[curWeek][i];
+		for (i in 0...2) grpWeekCharacters.members[i].setCharacter(weekCharacters[curWeek][i]);
 		
-		grpWeekCharacters.members[0].setCharacter(weekCharacters[curWeek][0]);
-		grpWeekCharacters.members[1].setCharacter(weekCharacters[curWeek][1]);
-		grpWeekCharacters.members[2].setCharacter(weekCharacters[curWeek][2]);
-
 		txtTracklist.text = "Tracks\n";
 		var stringThing:Array<String> = weekData[curWeek];
 
